@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+	<title>Meme Generator</title>
+
+	<link rel="stylesheet" href="css/reset.css">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css">
+	<link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="css/hexagons.css">
+
+</head>
+
+<body onload="init()" XXonkeyup="handleKeyPress(event)">
+
+	<!-- header -->
+	<header>
+
+		<div class="container">
+
+			<h1 class="logo">
+				<img src="img/logo.png" onclick="showGallery()">
+				<span class="sr-only">Memes Generator</span>
+			</h1>
+
+			<button class="btn" onmouseup="menuToggle()">&#9776;</button>
+
+			<ul class="nav inline-list">
+				<li>
+					<a href="#" onclick="showGallery(); menuToggle();">Gallery</a>
+				</li>
+				<li>
+					<a href="#" onclick="showAbout(); menuToggle();">About</a>
+				</li>
+				<li>
+					<a href="#" onclick="showContact(); menuToggle();">Get In Touch</a>
+				</li>
+			</ul>
+
+		</div>
+
+	</header>
+	<!-- /header -->
+
+	<!-- gallery section -->
+	<section class="gallery-section">
+
+		<div class="container">
+
+			<h2 class="sr-only">Popular searches</h2>
+			<ul class="searches inline-list">
+			</ul>
+
+			<div class="filter">
+				<label for="filter" class="sr-only">Filter images</label>
+				<input type="text" id="filter" list="keywords" placeholder="Filter images..." oninput="onSearch( this.value )">
+				<datalist id="keywords"></datalist>
+			</div>
+
+			<h2 class="sr-only">Images gallery</h2>
+			<ul class="images" id="hexGrid">
+			</ul>
+
+		</div>
+
+	</section>
+	<!-- /gallery section -->
+
+	<!-- canvas section -->
+	<section class="canvas-section">
+
+		<div class="container">
+
+			<button class="btn btn-back" onclick="showGallery()">Back to Gallery</button>
+
+			<h2 class="sr-only">Create you own Meme</h2>
+
+			<div class="meme">
+
+				<!-- editor canvas -->
+				<canvas class="meme-canvas" width="550" height="550"></canvas>
+				<!-- /editor canvas -->
+
+				<!-- text editor -->
+				<div class="text-editor">
+
+					<fieldset class="content">
+
+						<legend>Content</legend>
+
+						<div class="input-fields-container">
+						</div>
+						<button class="btn btn-success" onclick="onAddMemeText()">+Add Line</button>
+
+					</fieldset>
+
+					<fieldset class="design">
+
+						<legend>Design</legend>
+
+						<div class="meme-actions" aria-label="Actions">
+							<button class="btn dropdown">
+								<span class="sr-only">Font</span>
+								<i class="fas fa-font"></i>
+								<div class="dropdown-content">
+									<select class="meme-font" id="meme-font" size="6" onchange="onChangeMemeFont(this.value)">
+										<option value="" disabled selected>Text Font</option>
+										<option value="impact">Impact</option>
+										<option value="arial">Arial</option>
+										<option value="monospace">Monospace</option>
+										<option value="fantasy">Fantasy</option>
+										<option value="cursive">Cursive</option>
+									</select>
+								</div>
+							</button>
+							<button class="btn dropdown">
+								<span class="sr-only">Color</span>
+								<i class="fas fa-eye-dropper"></i>
+								<div class="dropdown-content">
+									<select class="meme-color" id="meme-color" size="6" onchange="onChangeMemeColor(this.value)">
+										<option value="" disabled selected>Text Color</option>
+										<option value="white">White</option>
+										<option value="black">Black</option>
+										<option value="red">Red</option>
+										<option value="green">Green</option>
+										<option value="blue">Blue</option>
+									</select>
+								</div>
+							</button>
+							<button class="btn" onclick="onChangeMemeBold()">
+								<span class="sr-only">Bold text</span>
+								<i class="fas fa-bold"></i>
+							</button>
+							<button class="btn" onclick="onChangeMemeStroke()">
+								<span class="sr-only">Strock text</span>
+								S
+							</button>
+							<button class="btn" onclick="onMemeSizeIncrease()">
+								<span class="sr-only">Increase text size</span>
+								<i class="fas fa-plus"></i>
+							</button>
+							<button class="btn" onclick="onMemeSizeDecrease()">
+								<span class="sr-only">Decrease text size</span>
+								<i class="fas fa-minus"></i>
+							</button>
+							<button class="btn" onclick="onMemeAlignment(-1)">
+								<span class="sr-only">Align left</span>
+								<i class="fas fa-align-left"></i>
+							</button>
+							<button class="btn" onclick="onMemeAlignment(0)">
+								<span class="sr-only">Align center</span>
+								<i class="fas fa-align-center"></i>
+							</button>
+							<button class="btn" onclick="onMemeAlignment(1)">
+								<span class="sr-only">Align right</span>
+								<i class="fas fa-align-right"></i>
+							</button>
+						</div>
+
+						<div class="meme-move">
+							<button class="btn meme-move-up" onclick="moveUp()">
+								<span class="sr-only">Move up</span>
+								<i class="fas fa-arrow-up"></i>
+							</button>
+							<button class="btn meme-move-left" onclick="moveLeft()">
+								<span class="sr-only">Move left</span>
+								<i class="fas fa-arrow-left"></i>
+							</button>
+							<button class="btn meme-move-down" onclick="moveDown()">
+								<span class="sr-only">Move down</span>
+								<i class="fas fa-arrow-down"></i>
+							</button>
+							<button class="btn meme-move-right" onclick="moveRight()">
+								<span class="sr-only">Move right</span>
+								<i class="fas fa-arrow-right"></i>
+							</button>
+						</div>
+
+					</fieldset>
+
+					<a href="#" class="btn btn-success float-right" onclick="onDownloadImage(this)" download="my-img.jpg">Download Meme</a>
+
+					<div id="fb-root"></div>
+					<div class="share-container"></div>
+
+				</div>
+				<!-- /text editor -->
+
+			</div>
+
+		</div>
+
+	</section>
+	<!-- /canvas section -->
+
+	<!-- about section -->
+	<section class="about-section">
+
+		<div class="container">
+
+			<h2>What is the Meme Generator?</h2>
+			<p>
+				Meme Generator is a free online image maker that allows you to add custom text to images. It operates in HTML5 if supported,
+				so your images are created instantly. Most commonly, people use the generator to add text captions to established
+				<a href="http://en.wikipedia.org/wiki/Meme" target="_blank">memes</a>, so technically it's more of a meme "captioner" than a meme maker. However, you can also upload your own images
+				as templates.
+			</p>
+
+			<h2>How can I customize my meme?</h2>
+			<ul>
+				<li>You add custom content to the image.</li>
+				<li>You can customize text font for each text line.</li>
+				<li>You can customize text color for each text line.</li>
+				<li>You can set the text to be bold.</li>
+				<li>You can add outline stroke to the text.</li>
+				<li>You can increase and decrease the text size.</li>
+				<li>You can align the text to left, center, right.</li>
+				<li>You can move the text boxes using the arrows.</li>
+			</ul>
+
+			<h2>Can I use the generator for more than just memes?</h2>
+			<p>
+				Yes! The Meme Generator is a flexible tool for many purposes. By uploading custom images and using all the customizations,
+				you can design many creative works including posters, banners, advertisements, and other custom graphics.
+			</p>
+
+		</div>
+
+	</section>
+	<!-- /about section -->
+
+	<!-- contact section -->
+	<section class="contact-section">
+
+		<div class="container">
+
+			<h2>Get in touch</h2>
+			<p>In order to get in touch use the contact form bellow:</p>
+
+			<form action="mailto:someone@example.com" method="post" enctype="text/plain">
+
+				<label for="contact-name" class="sr-only">Name</label>
+				<input type="text" id="contact-name" placeholder="Name (required)" required />
+
+				<label for="contact-email" class="sr-only">Email</label>
+				<input type="email" id="contact-email" placeholder="Email (required)" required />
+
+				<label for="contact-subject" class="sr-only">Subject</label>
+				<input type="text" id="contact-subject" placeholder="Subject" />
+
+				<label for="contact-message" class="sr-only">Message</label>
+				<textarea id="contact-message" placeholder="Write your message here..."></textarea>
+
+				<button type="submit" class="btn btn-success">Send</button>
+
+			</form>
+
+		</div>
+
+	</section>
+	<!-- /contact section -->
+
+	<script src="js/service-utils.js"></script>
+	<script src="js/service-gallery.js"></script>
+	<script src="js/service-keywords.js"></script>
+	<script src="js/service-popular-searches.js"></script>
+	<script src="js/service-upload.js"></script>
+	<script src="js/service-meme.js"></script>
+	<script src="js/main.js"></script>
+
+</body>
+
+</html>
